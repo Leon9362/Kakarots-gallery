@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rate Kakarot's Cuteness</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="minigame-container">
+    <a href="index.html" class="back-to-main">&larr;</a>
+    <div id="game-area">
+      <h1>Rate Kakarot's Cuteness</h1>
+      <div class="image-slider-container">
+        <div class="image-slider">
+          <img src="kakarot 1.jpg" alt="A cute photo of Kakarot">
+          <img src="kakarot 2.jpg" alt="A cute photo of Kakarot">
+          <img src="kakarot 3.jpg" alt="A cute photo of Kakarot">
+          <img src="kakarot 4.jpg" alt="A cute photo of Kakarot">
+          <img src="kakarot 5.jpg" alt="A cute photo of Kakarot">
+        </div>
+      </div>
+      <p>On a scale of 0 to 10, how cute is Kakarot?</p>
+      <div class="rating-input-area">
+        <input type="number" id="rating-input" min="0" max="10" placeholder="Enter rating...">
+        <button id="submit-rating">Submit</button>
+      </div>
+    </div>
+    <div id="final-score-area" class="result-message" style="display: none;">
+      <h2>Game Over!</h2>
+      <p id="final-score-text"></p>
+      <button id="play-again">Play Again</button>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const images = ["kakarot 1.jpg", "kakarot 2.jpg", "kakarot 3.jpg", "kakarot 4.jpg", "kakarot 5.jpg"];
+      const slider = document.querySelector('.image-slider');
+      const submitBtn = document.getElementById('submit-rating');
+      const ratingInput = document.getElementById('rating-input');
+      const gameArea = document.getElementById('game-area');
+      const finalScoreArea = document.getElementById('final-score-area');
+      const finalScoreText = document.getElementById('final-score-text');
+      const playAgainBtn = document.getElementById('play-again');
+
+      let currentIndex = 0;
+      let score = 0;
+
+      const nextImage = () => {
+        currentIndex++;
+        if (currentIndex < images.length) {
+          slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+        } else {
+          // End of game
+          gameArea.style.display = 'none';
+          finalScoreText.textContent = `You got ${score}/${images.length} correct!`;
+          finalScoreArea.style.display = 'block';
+        }
+        ratingInput.value = '';
+      };
+
+      submitBtn.addEventListener('click', () => {
+        const rating = parseInt(ratingInput.value, 10);
+        if (isNaN(rating) || rating < 0 || rating > 10) {
+          alert("Please enter a number between 0 and 10.");
+          return;
+        }
+
+        if (rating === 10) {
+          score++;
+        }
+        nextImage();
+      });
+      
+      ratingInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          submitBtn.click();
+        }
+      });
+
+      playAgainBtn.addEventListener('click', () => {
+        currentIndex = 0;
+        score = 0;
+        slider.style.transform = `translateX(0%)`;
+        gameArea.style.display = 'block';
+        finalScoreArea.style.display = 'none';
+        ratingInput.value = '';
+      });
+    });
+  </script>
+</body>
+</html>

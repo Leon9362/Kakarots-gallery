@@ -1,0 +1,552 @@
+body {
+  background: #18181b;
+  color: #e5e7eb;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  background: linear-gradient(90deg, #23232b 60%, #18181b 100%);
+  padding: 2rem 0 1rem 0;
+  text-align: center;
+}
+.cat-title {
+  font-family: 'Pacifico', cursive;
+  font-size: 3rem;
+  color: #fbbf24;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 8px #000a;
+}
+.about-section {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: #23232b;
+  border-radius: 1rem;
+  box-shadow: 0 4px 24px #000a;
+  padding: 2rem;
+  text-align: center;
+  transition: box-shadow 0.3s;
+}
+.about-section:hover {
+  box-shadow: 0 8px 32px #000c;
+}
+.about-section h2 {
+  color: #fbbf24;
+  margin-bottom: 1rem;
+}
+
+.learn-more {
+  margin-top: 1.5rem;
+}
+
+.learn-more a, .back-link a {
+  color: #fbbf24;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.learn-more a:hover, .back-link a:hover {
+  color: #facc15;
+}
+
+.arrow-link {
+  display: inline-block;
+  transition: transform 0.3s;
+}
+
+.learn-more a:hover .arrow-link {
+  transform: translateX(5px);
+}
+
+.back-link a:hover .arrow-link {
+  transform: translateX(-5px);
+}
+
+.back-link {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.tiktok-follow {
+  margin-top: 2rem;
+}
+
+.tiktok-button {
+  background-color: #ff0050; /* TikTok pink */
+  color: white;
+  padding: 15px 30px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2rem;
+  transition: background-color 0.3s, transform 0.3s;
+  display: inline-block;
+}
+
+.tiktok-button:hover {
+  background-color: #e60047;
+  transform: scale(1.05);
+}
+
+.gallery-section {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+.gallery-section h2 {
+  color: #fbbf24;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+.gallery-grid img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 1rem;
+  box-shadow: 0 2px 16px #000a;
+  transition: transform 0.3s, box-shadow 0.3s, filter 0.3s;
+  cursor: pointer;
+  background: #23232b;
+}
+.gallery-grid img:hover {
+  transform: scale(1.05) rotate(-2deg);
+  box-shadow: 0 8px 32px #000c;
+  filter: brightness(1.1) saturate(1.2);
+}
+
+/* Lightbox Styles */
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  z-index: 1000;
+}
+
+.lightbox-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox-content {
+  position: relative;
+  transform: scale(0.7);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lightbox-overlay.active .lightbox-content {
+  transform: scale(1);
+}
+
+#lightbox-img {
+  max-width: 80vw;
+  max-height: 80vh;
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px #000a;
+}
+
+.lightbox-close,
+.lightbox-arrow {
+  position: absolute;
+  background: rgba(30, 30, 30, 0.7);
+  color: #fbbf24;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+  z-index: 1001;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-close:hover,
+.lightbox-arrow:hover {
+  background: #fbbf24;
+  color: #18181b;
+}
+
+.lightbox-close {
+  top: 20px;
+  right: 20px;
+}
+
+.lightbox-arrow.left {
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.lightbox-arrow.right {
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.minigame-link {
+  position: fixed;
+  right: -150px; /* Start off-screen */
+  top: 50%;
+  transform: translateY(-50%);
+  background: #fbbf24;
+  color: #18181b;
+  padding: 15px 20px;
+  border-radius: 10px 0 0 10px;
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: right 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  animation: slide-in 1s 1s forwards;
+}
+
+.minigame-link .arrow {
+  font-size: 2rem;
+}
+
+@keyframes slide-in {
+  from {
+    right: -200px;
+  }
+  to {
+    right: 0;
+  }
+}
+
+.minigame-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #18181b;
+  color: #e5e7eb;
+  text-align: center;
+  padding: 2rem;
+  overflow: hidden; /* For the slider */
+}
+
+.image-slider-container {
+  width: 300px; /* Match image width */
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.image-slider {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.image-slider img {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 1rem;
+  flex-shrink: 0;
+}
+
+.rating-input-area {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+#rating-input {
+  padding: 10px;
+  font-size: 1.2rem;
+  border: 2px solid #fbbf24;
+  background: transparent;
+  color: #e5e7eb;
+  border-radius: 8px;
+  width: 150px;
+}
+
+#submit-rating, #play-again {
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border: none;
+  background: #fbbf24;
+  color: #18181b;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+#submit-rating:hover, #play-again:hover {
+  background: #facc15;
+}
+
+.result-message {
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.back-to-main {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: #fbbf24;
+  font-size: 2rem;
+  text-decoration: none;
+}
+
+/* Game Selection Menu */
+.game-selection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.game-card {
+  background: #23232b;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 300px;
+  text-align: center;
+  text-decoration: none;
+  color: #e5e7eb;
+  box-shadow: 0 4px 16px #000a;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.game-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 24px #000c;
+}
+
+.game-card h3 {
+  color: #fbbf24;
+  margin-bottom: 0.5rem;
+}
+
+/* Where's Kakarot Game */
+#game-board {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 1rem 0;
+}
+
+#game-board img {
+  width: 100%;
+  border-radius: 1rem;
+}
+
+#kakarot-hotspot {
+  position: absolute;
+  top: 55%; /* Adjust these values based on where Kakarot is in the image */
+  left: 45%; /* Adjust these values based on where Kakarot is in the image */
+  width: 50px;  /* Adjust size of the clickable area */
+  height: 50px; /* Adjust size of the clickable area */
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px dashed rgba(255, 255, 255, 0.5);
+  transition: border 0.3s;
+}
+
+#kakarot-hotspot:hover {
+  border: 3px solid #fbbf24;
+}
+
+/* Daily Post Styles */
+.daily-post {
+  background: #23232b;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  box-shadow: 0 4px 16px #000a;
+}
+
+.post-header h3 {
+  color: #fbbf24;
+  margin-bottom: 1rem;
+}
+
+.post-body img {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+}
+
+.post-body p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.footer {
+  background: #23232b;
+  color: #e5e7eb;
+  text-align: center;
+  padding: 1.5rem 0 1rem 0;
+  margin-top: auto;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+.heart {
+  color: #f43f5e;
+  font-size: 1.2em;
+  vertical-align: middle;
+}
+
+/* Memory Match Game */
+.memory-game-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+#play-again-memory {
+  padding: 8px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  background: #fbbf24;
+  color: #18181b;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+#play-again-memory:hover {
+  background: #facc15;
+}
+
+.memory-game-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  width: 100%;
+  max-width: 600px;
+  perspective: 1000px; /* For the 3D flip effect */
+}
+
+.memory-card {
+  width: 100%;
+  aspect-ratio: 1/1;
+  position: relative;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+
+.memory-card.flipped {
+  transform: rotateY(180deg);
+}
+
+.memory-card-inner {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.memory-card-front, .memory-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+  border-radius: 1rem;
+}
+
+.memory-card-front {
+  background: #23232b;
+  border: 2px solid #fbbf24;
+}
+
+.memory-card-back {
+  background-color: #fbbf24;
+  color: white;
+  transform: rotateY(180deg);
+  background-size: cover;
+  background-position: center;
+}
+
+/* Leaderboard Styles */
+.leaderboard {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 2rem;
+  background: #23232b;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 16px #000a;
+}
+
+#leaderboard-list {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+}
+
+#leaderboard-list li {
+  font-size: 1.1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #3a3a42;
+}
+
+#leaderboard-list li:last-child {
+  border-bottom: none;
+}
+
+#score-form-container {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+#player-name {
+  padding: 10px;
+  font-size: 1rem;
+  border: 2px solid #fbbf24;
+  background: transparent;
+  color: #e5e7eb;
+  border-radius: 8px;
+}
+
+#submit-score {
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  background: #fbbf24;
+  color: #18181b;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+#submit-score:hover {
+  background: #facc15;
+}
