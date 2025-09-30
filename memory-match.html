@@ -19,17 +19,37 @@
     <p id="memory-result-message" class="result-message"></p>
 
     <div id="score-form-container" style="display: none;">
-      <input type="text" id="player-name" placeholder="Enter your name">
+      <input type="text" id="player-name" placeholder="Enter your name" maxlength="20">
       <button id="submit-score">Save Score</button>
     </div>
 
     <div class="leaderboard">
-      <h2 class="cat-title" style="font-size: 2rem; margin-top: 2rem;">Leaderboard</h2>
+      <h2 class="cat-title" style="font-size: 2rem; margin-top: 2rem;">🌍 Global Leaderboard</h2>
+      <p id="loading-message" style="color: #fbbf24;">Loading leaderboard...</p>
       <ol id="leaderboard-list"></ol>
     </div>
   </div>
 
-  <script>
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getDatabase, ref, push, onValue, query, orderByChild, limitToFirst } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDnJOkbBtT62ItOMz1SY1IZfS_mcKkb73w",
+      authDomain: "kakarots-gallery.firebaseapp.com",
+      databaseURL: "https://kakarots-gallery-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "kakarots-gallery",
+      storageBucket: "kakarots-gallery.firebasestorage.app",
+      messagingSenderId: "746868844395",
+      appId: "1:746868844395:web:36c82533b699641f504e2e"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
     document.addEventListener('DOMContentLoaded', () => {
       const gameBoard = document.querySelector('.memory-game-board');
       const movesCounter = document.getElementById('moves-counter');
@@ -39,6 +59,7 @@
       const playerNameInput = document.getElementById('player-name');
       const submitScoreBtn = document.getElementById('submit-score');
       const leaderboardList = document.getElementById('leaderboard-list');
+      const loadingMessage = document.getElementById('loading-message');
 
       const images = ['kakarot 1.jpg', 'kakarot 2.jpg', 'kakarot 3.jpg', 'kakarot 4.jpg', 'kakarot 5.jpg', 'kakarot 6.jpg'];
       let cardDeck = [...images, ...images]; // Create pairs
@@ -47,6 +68,14 @@
       let matchedPairs = 0;
       let moves = 0;
       let canFlip = true;
+
+      // Inappropriate words filter
+      const bannedWords = ['fuck', 'shit', 'ass', 'bitch', 'damn', 'hell', 'crap', 'dick', 'cock', 'pussy', 'nigga', 'nigger', 'fag', 'retard', 'slut', 'whore', 'bastard', 'piss', 'cunt'];
+      
+      function containsInappropriateWords(text) {
+        const lowerText = text.toLowerCase();
+        return bannedWords.some(word => lowerText.includes(word));
+      }
 
       function shuffle(array) {
         array.sort(() => 0.5 - Math.random());
@@ -131,32 +160,63 @@
         }
       }
 
+      // Load and display leaderboard from Firebase
       function updateLeaderboard() {
-        const scores = JSON.parse(localStorage.getItem('memoryMatchScores')) || [];
-        leaderboardList.innerHTML = '';
-        scores.slice(0, 5).forEach(score => {
-          const li = document.createElement('li');
-          li.textContent = `${score.name} - ${score.moves} moves`;
-          leaderboardList.appendChild(li);
+        const scoresRef = ref(database, 'leaderboard');
+        const topScoresQuery = query(scoresRef, orderByChild('moves'), limitToFirst(10));
+        
+        onValue(topScoresQuery, (snapshot) => {
+          leaderboardList.innerHTML = '';
+          loadingMessage.style.display = 'none';
+          
+          const scores = [];
+          snapshot.forEach((childSnapshot) => {
+            scores.push(childSnapshot.val());
+          });
+          
+          if (scores.length === 0) {
+            leaderboardList.innerHTML = '<li style="color: #e5e7eb;">No scores yet. Be the first!</li>';
+            return;
+          }
+          
+          scores.forEach(score => {
+            const li = document.createElement('li');
+            li.textContent = `${score.name} - ${score.moves} moves`;
+            leaderboardList.appendChild(li);
+          });
         });
       }
 
+      // Save score to Firebase
       submitScoreBtn.addEventListener('click', () => {
         const playerName = playerNameInput.value.trim();
+        
         if (!playerName) {
           alert('Please enter your name!');
           return;
         }
 
-        const scores = JSON.parse(localStorage.getItem('memoryMatchScores')) || [];
-        const newScore = { name: playerName, moves: moves };
-        scores.push(newScore);
-        scores.sort((a, b) => a.moves - b.moves); // Sort by moves, ascending
-        localStorage.setItem('memoryMatchScores', JSON.stringify(scores));
+        if (playerName.length < 2) {
+          alert('Name must be at least 2 characters long!');
+          return;
+        }
+
+        if (containsInappropriateWords(playerName)) {
+          alert('Please use an appropriate name!');
+          return;
+        }
+
+        // Save to Firebase
+        const scoresRef = ref(database, 'leaderboard');
+        push(scoresRef, {
+          name: playerName,
+          moves: moves,
+          timestamp: Date.now()
+        });
 
         scoreFormContainer.style.display = 'none';
         playerNameInput.value = '';
-        updateLeaderboard();
+        alert('Score saved to global leaderboard!');
       });
       
       playAgainBtn.addEventListener('click', createBoard);
